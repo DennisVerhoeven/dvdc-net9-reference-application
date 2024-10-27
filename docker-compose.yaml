@@ -1,0 +1,44 @@
+﻿services:
+  fluffy:
+    image: fluffy
+    ports:
+      - "5050:80"
+    environment:
+      - LOCAL_DOCKER=True
+      - ASPNETCORE_URLS=http://+:80
+    build:
+      context: .
+      dockerfile: Fluffy/Dockerfile
+    depends_on:
+      - postgres
+      - jaeger
+    networks:
+      - pg_network
+  postgres:
+    image: postgres:latest
+    container_name: fluffy_pg
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    networks:
+      - pg_network
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "9411:9411"
+
+networks:
+  pg_network:
+    driver: bridge
+
+volumes:
+  postgres:

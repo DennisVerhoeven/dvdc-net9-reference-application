@@ -1,0 +1,5 @@
+How to do X thing in this Project?
+
+Run Migrations :
+
+dotnet ef migrations add YourMigrationName -o Data/Migrations
