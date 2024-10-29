@@ -1,0 +1,17 @@
+@contentType = application/json
+
+################################
+### Request: POST /api/v1/user
+################################
+
+
+POST https://localhost:7147/api/v1/user
+Content-Type: {{contentType}}
+
+{
+  "email": "email",
+  "password": "password",
+  "firstName": "firstName",
+  "lastName": "lastName"
+}
+

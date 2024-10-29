@@ -1,9 +1,9 @@
-using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Fluffy.Auth;
 using Fluffy.Data;
 using Fluffy.Data.Entities.User;
 using Microsoft.EntityFrameworkCore;
-using Fluffy.Auth;
 
 namespace Fluffy.Features.Users;
 
@@ -11,8 +11,13 @@ public interface IUserService
 {
     Task<UserDao?> GetUserById(Guid id, CancellationToken cancellationToken);
     Task<UserDao> RegisterUser(Models.RegisterUserRequest request, CancellationToken cancellationToken);
-    Task<(UserDao User, string AccessToken, string RefreshToken)> LoginUser(Models.LoginUserRequest request, CancellationToken cancellationToken);
-    Task<(string AccessToken, string RefreshToken)> RefreshUserToken(string accessToken, string refreshToken, CancellationToken cancellationToken);
+
+    Task<(UserDao User, string AccessToken, string RefreshToken)> LoginUser(Models.LoginUserRequest request,
+        CancellationToken cancellationToken);
+
+    Task<(string AccessToken, string RefreshToken)> RefreshUserToken(string accessToken, string refreshToken,
+        CancellationToken cancellationToken);
+
     Task<bool> IsEmailRegistered(string email, CancellationToken cancellationToken);
 }
 
@@ -59,7 +64,7 @@ public class UserService : IUserService
     }
 
     public async Task<(UserDao User, string AccessToken, string RefreshToken)> LoginUser(
-        Models.LoginUserRequest request, 
+        Models.LoginUserRequest request,
         CancellationToken cancellationToken)
     {
         var user = await _dbContext.Users
@@ -72,7 +77,7 @@ public class UserService : IUserService
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         var accessToken = _tokenService.GenerateAccessToken(claims);
@@ -81,14 +86,14 @@ public class UserService : IUserService
         user.LastLogin = DateTime.UtcNow;
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-        
+
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return (user, accessToken, refreshToken);
     }
 
     public async Task<(string AccessToken, string RefreshToken)> RefreshUserToken(
-        string accessToken, 
+        string accessToken,
         string refreshToken,
         CancellationToken cancellationToken)
     {
@@ -97,12 +102,10 @@ public class UserService : IUserService
 
         var user = await _dbContext.Users.FindAsync(new object?[] { userId }, cancellationToken);
 
-        if (user == null || 
-            user.RefreshToken != refreshToken || 
+        if (user == null ||
+            user.RefreshToken != refreshToken ||
             user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-        {
             throw new UnauthorizedAccessException("Invalid token");
-        }
 
         var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
         var newRefreshToken = _tokenService.GenerateRefreshToken();

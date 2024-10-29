@@ -6,18 +6,19 @@ public static class CartEndpoints
 {
     public const string BasePath = "cart";
 
-    static IResult AddItemToCart([FromBody] Models.AddToCartParams addToCartParams, HttpContext context)
+    private static IResult AddItemToCart([FromBody] Models.AddToCartParams addToCartParams, HttpContext context)
     {
         return TypedResults.Ok(new Models.Cart(Guid.NewGuid(), Guid.NewGuid(),
             [new Models.CartItem(Guid.NewGuid(), addToCartParams.ProductId, addToCartParams.Quantity, 9)]));
     }
 
-    static IResult GetCartItems(HttpContext context)
+    private static IResult GetCartItems(HttpContext context)
     {
         var test = new Random().Next(1, 100);
         if (test > 50) return TypedResults.NotFound();
 
-        return TypedResults.Ok(new Models.Cart(Guid.NewGuid(), Guid.NewGuid(), [new Models.CartItem(Guid.NewGuid(), Guid.NewGuid(), 5, 9)]));
+        return TypedResults.Ok(new Models.Cart(Guid.NewGuid(), Guid.NewGuid(),
+            [new Models.CartItem(Guid.NewGuid(), Guid.NewGuid(), 5, 9)]));
     }
 
     public static RouteGroupBuilder MapCartV1Endpoints(this RouteGroupBuilder group)
@@ -29,5 +30,4 @@ public static class CartEndpoints
 
         return group;
     }
-    
 }

@@ -1,5 +1,4 @@
 using Fluffy.Auth;
-using Xunit;
 
 namespace Fluffy.Tests.Auth;
 
@@ -12,7 +11,7 @@ public class PasswordHasherTests
         const string password = "TestPassword123!";
 
         // Act
-        string hashedPassword = PasswordHasher.HashPassword(password);
+        var hashedPassword = PasswordHasher.HashPassword(password);
 
         // Assert
         Assert.NotEmpty(hashedPassword);
@@ -26,8 +25,8 @@ public class PasswordHasherTests
         const string password = "TestPassword123!";
 
         // Act
-        string hash1 = PasswordHasher.HashPassword(password);
-        string hash2 = PasswordHasher.HashPassword(password);
+        var hash1 = PasswordHasher.HashPassword(password);
+        var hash2 = PasswordHasher.HashPassword(password);
 
         // Assert
         Assert.NotEqual(hash1, hash2);
@@ -38,10 +37,10 @@ public class PasswordHasherTests
     {
         // Arrange
         const string password = "TestPassword123!";
-        string hashedPassword = PasswordHasher.HashPassword(password);
+        var hashedPassword = PasswordHasher.HashPassword(password);
 
         // Act
-        bool result = PasswordHasher.VerifyPassword(hashedPassword, password);
+        var result = PasswordHasher.VerifyPassword(hashedPassword, password);
 
         // Assert
         Assert.True(result);
@@ -53,10 +52,10 @@ public class PasswordHasherTests
         // Arrange
         const string password = "TestPassword123!";
         const string wrongPassword = "WrongPassword123!";
-        string hashedPassword = PasswordHasher.HashPassword(password);
+        var hashedPassword = PasswordHasher.HashPassword(password);
 
         // Act
-        bool result = PasswordHasher.VerifyPassword(hashedPassword, wrongPassword);
+        var result = PasswordHasher.VerifyPassword(hashedPassword, wrongPassword);
 
         // Assert
         Assert.False(result);

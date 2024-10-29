@@ -1,0 +1,11 @@
+@contentType = application/json
+
+###############################
+### Request: GET /api/v1/cart
+###############################
+
+
+GET https://localhost:7147/api/v1/cart
+Content-Type: {{contentType}}
+
+

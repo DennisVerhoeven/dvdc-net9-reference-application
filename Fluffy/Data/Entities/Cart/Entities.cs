@@ -20,7 +20,7 @@ public class CartItemDao : DataAccessObject
     public Guid CartId { get; set; }
     public Guid ProductId { get; set; }
     public int Quantity { get; set; }
-    
+
     public CartDao Cart { get; set; }
 }
 
@@ -44,7 +44,7 @@ public class CartConfiguration : IEntityTypeConfiguration<CartDao>
         builder.Property(c => c.IsExpired)
             .IsRequired()
             .HasDefaultValue(false);
-        
+
         builder.HasOne<UserDao>()
             .WithMany()
             .HasForeignKey(c => c.UserId);
@@ -63,7 +63,7 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItemDao>
 
         builder.Property(ci => ci.Quantity)
             .IsRequired();
-        
+
         builder.HasOne(ci => ci.Cart)
             .WithMany(c => c.CartItems)
             .HasForeignKey(ci => ci.CartId);

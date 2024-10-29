@@ -23,7 +23,7 @@ public class UserDao : DataAccessObject
 public enum AuthenticationMode
 {
     Integrated,
-     External
+    External
 }
 
 public class UserConfiguration : IEntityTypeConfiguration<UserDao>
@@ -35,7 +35,7 @@ public class UserConfiguration : IEntityTypeConfiguration<UserDao>
 
         builder.HasIndex(u => u.Email)
             .IsUnique();
-        
+
         builder.Property(u => u.FirstName)
             .IsRequired();
 

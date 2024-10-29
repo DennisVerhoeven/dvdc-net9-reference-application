@@ -1,4 +1,3 @@
-
 using System.Security.Claims;
 using Fluffy.Auth;
 using Fluffy.Data;
@@ -11,16 +10,16 @@ namespace Fluffy.Tests.Features.Users;
 
 public class UserServiceTests
 {
-    private readonly UserService _userService;
     private readonly FluffyDbContext _dbContext;
     private readonly Mock<ITokenService> _tokenServiceMock;
+    private readonly UserService _userService;
 
     public UserServiceTests()
     {
         var options = new DbContextOptionsBuilder<FluffyDbContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
-        
+
         _dbContext = new FluffyDbContext(options);
         _tokenServiceMock = new Mock<ITokenService>();
         _userService = new UserService(_dbContext, _tokenServiceMock.Object);
@@ -78,7 +77,7 @@ public class UserServiceTests
             RegisteredAt = DateTime.UtcNow,
             AuthenticationMode = AuthenticationMode.Integrated
         };
-        
+
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
 
@@ -95,10 +94,10 @@ public class UserServiceTests
         // Arrange
         var request = new Models.RegisterUserRequest
         (
-            Email: "new@example.com",
-            Password: "password123",
-            FirstName: "New",
-            LastName: "User"
+            "new@example.com",
+            "password123",
+            "New",
+            "User"
         );
 
         // Act
@@ -127,7 +126,7 @@ public class UserServiceTests
             RegisteredAt = DateTime.UtcNow,
             AuthenticationMode = AuthenticationMode.Integrated
         };
-        
+
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
 
@@ -157,12 +156,12 @@ public class UserServiceTests
         // Arrange
         var request = new Models.LoginUserRequest
         (
-            Email: "nonexistent@example.com",
-            Password: "wrongpassword"
+            "nonexistent@example.com",
+            "wrongpassword"
         );
 
         // Act & Assert
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => 
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
             _userService.LoginUser(request, CancellationToken.None));
     }
 
@@ -182,7 +181,7 @@ public class UserServiceTests
             RefreshToken = "valid-refresh-token",
             RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(1)
         };
-        
+
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
 
@@ -200,8 +199,8 @@ public class UserServiceTests
 
         // Act
         var result = await _userService.RefreshUserToken(
-            "old-access-token", 
-            "valid-refresh-token", 
+            "old-access-token",
+            "valid-refresh-token",
             CancellationToken.None);
 
         // Assert
@@ -225,7 +224,7 @@ public class UserServiceTests
             RefreshToken = "different-refresh-token",
             RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(1)
         };
-        
+
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
 
@@ -238,7 +237,7 @@ public class UserServiceTests
             .Returns(principal);
 
         // Act & Assert
-        await Assert.ThrowsAsync<UnauthorizedAccessException>(() => 
+        await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
             _userService.RefreshUserToken("old-access-token", "invalid-refresh-token", CancellationToken.None));
     }
 }

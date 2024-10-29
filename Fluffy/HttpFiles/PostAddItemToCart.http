@@ -1,0 +1,15 @@
+@contentType = application/json
+
+################################
+### Request: POST /api/v1/cart
+################################
+
+
+POST https://localhost:7147/api/v1/cart
+Content-Type: {{contentType}}
+
+{
+  "productId": "productId",
+  "quantity": 0
+}
+

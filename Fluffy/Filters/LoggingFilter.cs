@@ -23,7 +23,7 @@ public class LoggingFilter : IEndpointFilter
         var result = await next(context);
         stopwatch.Stop();
 
-        _logger.LogInformation("Request completed: {Method} {Path} - Took {ElapsedMilliseconds}ms", 
+        _logger.LogInformation("Request completed: {Method} {Path} - Took {ElapsedMilliseconds}ms",
             method, requestPath, stopwatch.ElapsedMilliseconds);
 
         return result;

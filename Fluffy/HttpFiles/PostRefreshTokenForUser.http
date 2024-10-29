@@ -1,0 +1,15 @@
+@contentType = application/json
+
+###################################################
+### Request: POST /api/v1/user/auth/refresh-token
+###################################################
+
+
+POST https://localhost:7147/api/v1/user/auth/refresh-token
+Content-Type: {{contentType}}
+
+{
+  "accessToken": "accessToken",
+  "refreshToken": "refreshToken"
+}
+

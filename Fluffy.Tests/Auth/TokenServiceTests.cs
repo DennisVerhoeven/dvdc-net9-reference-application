@@ -5,8 +5,8 @@ namespace Fluffy.Tests.Auth;
 
 public class TokenServiceTests
 {
-    private readonly TokenService _tokenService;
     private readonly AppSettings _appSettings;
+    private readonly TokenService _tokenService;
 
     public TokenServiceTests()
     {
@@ -33,7 +33,7 @@ public class TokenServiceTests
         };
 
         // Act
-        string token = _tokenService.GenerateAccessToken(claims);
+        var token = _tokenService.GenerateAccessToken(claims);
 
         // Assert
         Assert.NotEmpty(token);
@@ -47,7 +47,7 @@ public class TokenServiceTests
     public void GenerateRefreshToken_ReturnsNonEmptyString()
     {
         // Act
-        string refreshToken = _tokenService.GenerateRefreshToken();
+        var refreshToken = _tokenService.GenerateRefreshToken();
 
         // Assert
         Assert.NotEmpty(refreshToken);
@@ -57,8 +57,8 @@ public class TokenServiceTests
     public void GenerateRefreshToken_GeneratesUniqueTokens()
     {
         // Act
-        string refreshToken1 = _tokenService.GenerateRefreshToken();
-        string refreshToken2 = _tokenService.GenerateRefreshToken();
+        var refreshToken1 = _tokenService.GenerateRefreshToken();
+        var refreshToken2 = _tokenService.GenerateRefreshToken();
 
         // Assert
         Assert.NotEqual(refreshToken1, refreshToken2);
@@ -69,10 +69,10 @@ public class TokenServiceTests
     {
         // Arrange
         var claims = new[] { new Claim(ClaimTypes.Name, "testuser") };
-        string token = _tokenService.GenerateAccessToken(claims);
+        var token = _tokenService.GenerateAccessToken(claims);
 
         // Act
-        bool isValid = _tokenService.ValidateToken(token, out var principal);
+        var isValid = _tokenService.ValidateToken(token, out var principal);
 
         // Assert
         Assert.True(isValid);
@@ -86,7 +86,7 @@ public class TokenServiceTests
         const string invalidToken = "invalid.token.string";
 
         // Act
-        bool isValid = _tokenService.ValidateToken(invalidToken, out var principal);
+        var isValid = _tokenService.ValidateToken(invalidToken, out var principal);
 
         // Assert
         Assert.False(isValid);
@@ -98,7 +98,7 @@ public class TokenServiceTests
     {
         // Arrange
         var claims = new[] { new Claim(ClaimTypes.Name, "testuser") };
-        string token = _tokenService.GenerateAccessToken(claims);
+        var token = _tokenService.GenerateAccessToken(claims);
 
         // Act
         var principal = _tokenService.GetPrincipalFromExpiredToken(token);
@@ -115,7 +115,7 @@ public class TokenServiceTests
         const string invalidToken = "invalid.token.string";
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => 
+        Assert.Throws<ArgumentException>(() =>
             _tokenService.GetPrincipalFromExpiredToken(invalidToken));
     }
 }

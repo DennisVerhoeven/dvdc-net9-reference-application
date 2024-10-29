@@ -22,7 +22,7 @@ public class TokenService : ITokenService
     public TokenService(AppSettings appSettings)
     {
         _appSettings = appSettings;
-        
+
         _tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -44,12 +44,12 @@ public class TokenService : ITokenService
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
 
         var token = new JwtSecurityToken(
-            issuer: _appSettings.TokenGeneration.Issuer,
-            audience: _appSettings.TokenGeneration.Audience,
-            claims: claims,
-            notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddMinutes(15), // Shorter lifetime for access tokens
-            signingCredentials: credentials
+            _appSettings.TokenGeneration.Issuer,
+            _appSettings.TokenGeneration.Audience,
+            claims,
+            DateTime.UtcNow,
+            DateTime.UtcNow.AddMinutes(15), // Shorter lifetime for access tokens
+            credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
@@ -74,9 +74,7 @@ public class TokenService : ITokenService
         if (securityToken is not JwtSecurityToken jwtSecurityToken ||
             !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512,
                 StringComparison.InvariantCultureIgnoreCase))
-        {
             throw new SecurityTokenException("Invalid token");
-        }
 
         return principal;
     }

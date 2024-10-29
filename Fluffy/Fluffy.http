@@ -1,6 +1,0 @@
-@Fluffy_HostAddress = http://localhost:5052
-
-GET {{Fluffy_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
